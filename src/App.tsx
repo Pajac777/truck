@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   CheckCircle2, 
   Truck, 
@@ -107,6 +107,67 @@ function PromoBar() {
   );
 }
 
+const MALE_NAMES = [
+  "João", "Pedro", "Lucas", "Mateus", "Marcos", "Gabriel", "Rafael", 
+  "Marcelo", "Carlos", "Bruno", "Fernando", "Ricardo", "Eduardo", 
+  "Gustavo", "Felipe", "Rodrigo", "Thiago", "Diego", "Alexandre", "Caio"
+];
+
+function SalesNotification() {
+  const [notification, setNotification] = useState<{ name: string; time: string } | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const showNotification = () => {
+      const randomName = MALE_NAMES[Math.floor(Math.random() * MALE_NAMES.length)];
+      const randomTime = Math.floor(Math.random() * 59) + 1;
+      
+      setNotification({ name: randomName, time: `${randomTime} min atrás` });
+      setIsVisible(true);
+
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 5000); // Hide after 5 seconds
+    };
+
+    // Initial delay
+    const initialTimer = setTimeout(showNotification, 3000);
+
+    // Loop interval
+    const intervalTimer = setInterval(() => {
+      showNotification();
+    }, 15000 + Math.random() * 10000); // Show every 15-25 seconds
+
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(intervalTimer);
+    };
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {isVisible && notification && (
+        <motion.div
+          initial={{ opacity: 0, x: -50, scale: 0.9 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: -50, scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="fixed bottom-4 left-4 z-50 bg-[#121212] border border-zinc-800 text-white p-3 pr-5 rounded-2xl shadow-2xl flex items-center gap-3 w-[280px] xs:w-[320px]"
+        >
+          <div className="bg-brand/20 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-brand/30">
+            <ShoppingCart className="w-5 h-5 text-brand" />
+          </div>
+          <div>
+            <p className="text-[13px] font-bold leading-tight"><span className="text-brand">{notification.name}</span> acabou de comprar</p>
+            <p className="text-[11px] text-zinc-400 font-medium">Trk dinheiro infinito</p>
+            <p className="text-[10px] text-zinc-500 mt-0.5">{notification.time}</p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function App() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -132,7 +193,7 @@ export default function App() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight font-heading">
-              Descubra como ter <span className="text-brand">dinheiro infinito</span> no Truck Simulator em 90 segundos, mesmo sem gastar horas jogando
+              Descubra como ter <span className="text-brand">dinheiro infinito</span> no Truck Simulator em 90 segundos, sem mod
             </h1>
             <p className="text-zinc-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
               Chega de gastar dias preso no mesmo caminhão para fazer dinheiro
@@ -144,12 +205,35 @@ export default function App() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full max-w-3xl mx-auto rounded-2xl shadow-2xl overflow-hidden mb-12 relative"
+            className="w-full max-w-3xl mx-auto rounded-2xl shadow-2xl overflow-hidden mb-12 relative bg-black"
           >
-            <div dangerouslySetInnerHTML={{ __html: `
-<style>wistia-player[media-id='wdn8f6p4ir']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/wdn8f6p4ir/swatch'); display: block; filter: blur(5px); padding-top:75.0%; }</style> 
-<wistia-player media-id="wdn8f6p4ir" aspect="1.3333333333333333"></wistia-player>
-            ` }} />
+            <div className="wistia-embed-container" ref={(el) => {
+              if (el && !el.querySelector('wistia-player')) {
+                el.innerHTML = '';
+                
+                // Add the wistia player and styles
+                el.innerHTML = `
+                  <style>wistia-player[media-id='wdn8f6p4ir']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/wdn8f6p4ir/swatch'); display: block; filter: blur(5px); padding-top:75.0%; }</style> 
+                  <wistia-player media-id="wdn8f6p4ir" aspect="1.3333333333333333"></wistia-player>
+                `;
+
+                // Add Wistia scripts if they don't already exist
+                if (!document.querySelector('script[src="https://fast.wistia.com/player.js"]')) {
+                  const playerScript = document.createElement('script');
+                  playerScript.src = "https://fast.wistia.com/player.js";
+                  playerScript.async = true;
+                  document.head.appendChild(playerScript);
+                }
+
+                if (!document.querySelector('script[src="https://fast.wistia.com/embed/wdn8f6p4ir.js"]')) {
+                  const embedScript = document.createElement('script');
+                  embedScript.src = "https://fast.wistia.com/embed/wdn8f6p4ir.js";
+                  embedScript.async = true;
+                  embedScript.type = "module";
+                  document.head.appendChild(embedScript);
+                }
+              }
+            }} />
           </motion.div>
 
           {/* Initial CTA */}
@@ -163,7 +247,7 @@ export default function App() {
               onClick={scrollToOffer}
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="w-full max-w-md px-8 py-5 bg-brand hover:bg-brand/90 text-white font-bold rounded-xl text-lg md:text-xl shadow-[0_0_40px_-10px_rgba(0,200,83,0.5)] transition-all transform active:scale-95 flex items-center justify-center group mb-4"
+              className="w-full max-w-md px-8 py-5 bg-brand hover:bg-brand/90 text-white font-bold rounded-xl text-[15px] leading-[25px] shadow-[0_0_40px_-10px_rgba(0,200,83,0.5)] transition-all transform active:scale-95 flex items-center justify-center group mb-4 text-center"
             >
               QUERO DINHEIRO INFINITO AGORA
             </motion.button>
@@ -246,25 +330,33 @@ export default function App() {
             </div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((t, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 relative group"
-              >
-                <div className="flex gap-1 mb-4 text-brand">
-                  {[...Array(t.stars)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
-                </div>
-                <p className="text-zinc-300 italic mb-6 leading-relaxed">"{t.text}"</p>
-                <div>
-                  <p className="font-bold text-zinc-100">{t.name}</p>
-                  <p className="text-zinc-500 text-sm">{t.age}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+            <motion.img
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              src="https://iili.io/BiWije4.png"
+              alt="Depoimento 1"
+              className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+            />
+            <motion.img
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              src="https://iili.io/BiWiwml.png"
+              alt="Depoimento 2"
+              className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+            />
+            <motion.img
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              src="https://iili.io/BiWiOI2.png"
+              alt="Depoimento 3"
+              className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+            />
           </div>
         </div>
       </section>
@@ -313,7 +405,7 @@ export default function App() {
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               className="w-full py-6 bg-brand hover:bg-brand/90 text-white font-black text-lg md:text-xl rounded-2xl shadow-[0_10px_40px_-5px_rgba(0,200,83,0.4)] transition-all transform active:scale-[0.98] flex items-center justify-center group text-center"
             >
-              QUERO MEU SAVE AGORA
+              QUERO BAIXAR AGORA
             </motion.a>
 
             <div className="mt-8 flex flex-wrap justify-center gap-6 opacity-60 grayscale hover:grayscale-0 transition-all">
@@ -410,7 +502,7 @@ export default function App() {
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="w-full max-w-2xl mx-auto py-8 bg-white text-black hover:bg-brand hover:text-white font-black text-lg md:text-2xl rounded-3xl shadow-2xl transition-all transform hover:scale-105 active:scale-95 mb-8 flex items-center justify-center text-center px-4"
           >
-            QUERO MEU SAVE POR R$ 5,00 AGORA
+            QUERO BAIXAR POR R$ 5,00 AGORA
           </motion.a>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-zinc-500 text-sm font-medium">
@@ -431,6 +523,8 @@ export default function App() {
           <Truck className="w-[600px] h-[600px]" />
         </div>
       </footer>
+      
+      <SalesNotification />
     </div>
   );
 }
