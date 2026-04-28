@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Truck Simulator Pro Save</title>
+    <script>
+      // Fix for circular structure errors caused by third-party scripts (like pixels)
+      // when they try to stringify React components/elements.
+      (function() {
+        const originalStringify = JSON.stringify;
+        JSON.stringify = function(value, replacer, space) {
+          try {
+            return originalStringify(value, replacer, space);
+          } catch (e) {
+            if (e && e.message && (e.message.indexOf('circular') !== -1 || e.message.indexOf('Circular') !== -1)) {
+              return '"[Circular]"';
+            }
+            throw e;
+          }
+        };
+      })();
+
+      window.pixelId = "69ec0a763eb7cfde5b03cd09";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+    <script src="https://fast.wistia.com/player.js" async></script>
+    <script src="https://fast.wistia.com/embed/wdn8f6p4ir.js" async type="module"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+      async
+      defer
+    ></script>
+  </body>
+</html>
+
