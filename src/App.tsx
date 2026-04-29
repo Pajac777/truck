@@ -25,27 +25,6 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const testimonials = [
-  {
-    name: "Matheus R.",
-    age: "24 anos",
-    text: "Sempre odiei ficar preso naquele grind chato. Apliquei o save, abri o jogo e já comprei tudo que queria. Valeu cada centavo.",
-    stars: 5
-  },
-  {
-    name: "Lucas A.",
-    age: "29 anos",
-    text: "Achei que ia ser complicado mas foi ridículo de simples. Em menos de 2 minutos tava com a frota completa.",
-    stars: 5
-  },
-  {
-    name: "Diego S.",
-    age: "31 anos",
-    text: "Finalmente consigo jogar sem ficar assistir propaganda pra tudo. Jogo outro nível agora.",
-    stars: 5
-  }
-];
-
 const faqs = [
   {
     q: "É difícil de aplicar?",
@@ -193,7 +172,7 @@ export default function App() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight font-heading">
-              Descubra como ter <span className="text-brand">dinheiro infinito</span> no Truck Simulator em 90 segundos, sem mod
+              Descubra como ter <span className="text-brand">dinheiro infinito</span> no Truck Simulator em 90 segundos
             </h1>
             <p className="text-zinc-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
               Chega de gastar dias preso no mesmo caminhão para fazer dinheiro
@@ -267,6 +246,16 @@ export default function App() {
             className="space-y-8"
           >
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 font-heading">Você conhece bem essa sensação…</h2>
+            <motion.img 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              src="https://iili.io/Bimx10F.png" 
+              alt="Você conhece bem essa sensação" 
+              className="w-full max-w-2xl mx-auto rounded-2xl shadow-xl mb-12 object-contain"
+              loading="lazy"
+              decoding="async"
+            />
             <div className="space-y-6 text-zinc-400 text-lg">
               <div className="flex items-start gap-3">
                 <XCircle className="w-5 h-5 text-red-500/60 mt-1 flex-shrink-0" />
@@ -330,7 +319,7 @@ export default function App() {
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+          <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-8">
             <motion.img
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -338,6 +327,8 @@ export default function App() {
               src="https://iili.io/BiWije4.png"
               alt="Depoimento 1"
               className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+              loading="lazy"
+              decoding="async"
             />
             <motion.img
               initial={{ opacity: 0, y: 30 }}
@@ -347,6 +338,8 @@ export default function App() {
               src="https://iili.io/BiWiwml.png"
               alt="Depoimento 2"
               className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+              loading="lazy"
+              decoding="async"
             />
             <motion.img
               initial={{ opacity: 0, y: 30 }}
@@ -356,6 +349,19 @@ export default function App() {
               src="https://iili.io/BiWiOI2.png"
               alt="Depoimento 3"
               className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+              loading="lazy"
+              decoding="async"
+            />
+            <motion.img
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              src="https://iili.io/Bim2ITX.png"
+              alt="Depoimento 4"
+              className="w-full max-w-sm rounded-2xl shadow-xl border border-zinc-800 object-contain"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
